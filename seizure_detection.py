@@ -53,9 +53,11 @@ def run_seizure_detection(build_target):
         'Patient_8'
     ]
     pipelines = [
-        # NOTE: multiple Pipelines will be added to compare results from each 
+        # NOTE: you can enable multiple pipelines to run them all and compare results
+        # Uncomment the following lines to test different pipelines
         # Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 48), Magnitude(), Log10()]),
         # Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 64), Magnitude(), Log10()]),
+        # Pipeline(gen_ictal=False, pipeline=[FFT(), Magnitude(), Log10()]),
         Pipeline(gen_ictal=False, pipeline=[FFTWithTimeFreqCorrelation(1, 48, 400, 'usf')]),
     ]
     classifiers = [
