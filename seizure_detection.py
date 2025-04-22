@@ -55,13 +55,34 @@ def run_seizure_detection(build_target):
     pipelines = [
         # NOTE: you can enable multiple pipelines to run them all and compare results
         # Uncomment the following lines to test different pipelines
-        # Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 48), Magnitude(), Log10()]),
-        # Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 64), Magnitude(), Log10()]),
-        # Pipeline(gen_ictal=False, pipeline=[FFT(), Magnitude(), Log10()]),
+        Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 48), Magnitude(), Log10()]),
+        Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 64), Magnitude(), Log10()]),
+        Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 96), Magnitude(), Log10()]),
+        Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 128), Magnitude(), Log10()]),
+        Pipeline(gen_ictal=False, pipeline=[FFT(), Slice(1, 160), Magnitude(), Log10()]),
+        Pipeline(gen_ictal=False, pipeline=[Stats()]),
+        Pipeline(gen_ictal=False, pipeline=[DaubWaveletStats(4)]),
+        Pipeline(gen_ictal=False, pipeline=[Resample(400), DaubWaveletStats(4)]),
+        Pipeline(gen_ictal=False, pipeline=[Resample(400), MFCC()]),
+        Pipeline(gen_ictal=False, pipeline=[FFTWithTimeFreqCorrelation(1, 48, 400, 'us')]),
+        Pipeline(gen_ictal=True,  pipeline=[FFTWithTimeFreqCorrelation(1, 48, 400, 'us')]),
+        Pipeline(gen_ictal=False, pipeline=[FFT(), Magnitude(), Log10()]),
         Pipeline(gen_ictal=False, pipeline=[FFTWithTimeFreqCorrelation(1, 48, 400, 'usf')]),
+        Pipeline(gen_ictal=False, pipeline=[TimeFreqCorrelation(1, 48, 400, 'us')]),
+        Pipeline(gen_ictal=False, pipeline=[TimeFreqCorrelation(1, 48, 400, 'usf')]),
+        Pipeline(gen_ictal=False, pipeline=[TimeFreqCorrelation(1, 48, 400, 'none')]),
+        Pipeline(gen_ictal=True,  pipeline=[FFTWithTimeFreqCorrelation(1, 48, 400, 'usf')]),
+        Pipeline(gen_ictal=False, pipeline=[FFTWithTimeFreqCorrelation(1, 48, 400, 'none')]),
+        Pipeline(gen_ictal=True,  pipeline=[FFTWithTimeFreqCorrelation(1, 48, 400, 'none')]),
+        Pipeline(gen_ictal=False, pipeline=[TimeCorrelation(400, 'usf', with_corr=True, with_eigen=True)]),
+        Pipeline(gen_ictal=False, pipeline=[TimeCorrelation(400, 'us', with_corr=True, with_eigen=True)]),
+        Pipeline(gen_ictal=False, pipeline=[TimeCorrelation(400, 'us', with_corr=True, with_eigen=False)]),
+        Pipeline(gen_ictal=False, pipeline=[TimeCorrelation(400, 'us', with_corr=False, with_eigen=True)]),
+        Pipeline(gen_ictal=False, pipeline=[TimeCorrelation(400, 'none', with_corr=True, with_eigen=True)]),
     ]
     classifiers = [
         # NOTE: multiple Classifiers will be added to compare results from each 
+         (RandomForestClassifier(n_estimators=3000, min_samples_split=1, bootstrap=False, n_jobs=4, random_state=0), 'rf3000mss1Bfrs0'),
         (RandomForestClassifier(n_estimators=3000, min_samples_split=2, bootstrap=False, n_jobs=4, random_state=0), 'rf3000mss2Bfrs0'),
     ]
     cv_ratio = 0.5
